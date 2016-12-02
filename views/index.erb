@@ -1,0 +1,15 @@
+<h3>Fill in any known tiles in the template below</h3>
+<form action="/solution" method="post">
+	<table>
+		<% 9.times do |row| %>
+			<tr>
+				<% 9.times do |column| %>
+					<td><input class="slot" type="text" maxlength="1" name=<%= row.to_s + "-" + column.to_s %> value="" onkeyup="setVal(this)" oninput="this.value=this.value.replace(/[^1-9]/g,'');"></td>
+				<% end %>
+			</tr>
+		<% end %>
+	</table>
+
+	<button type="submit">Solve</button>
+	<button type="reset" onclick="clearSlots();">Reset</button>
+</form>

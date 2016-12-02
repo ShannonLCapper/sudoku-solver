@@ -1,0 +1,129 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+
+}
+
+body {
+	padding: 0px 20px 20px;
+	color: #bc893f;
+	text-align: center;
+	background: #272727; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#151515, #272727); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#151515, #272727); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#151515, #272727); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#151515, #272727); /* Standard syntax */
+    background-repeat: no-repeat;
+}
+
+body, td input {
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+h1 {
+	font-size: 3rem;
+	text-shadow: 2px 2px #a95b00;
+}
+
+h3 {
+	font-weight: normal;
+}
+
+table {
+	margin: 0 auto;
+	padding: 0;
+	border-collapse: collapse;
+	background-color: rgba(255,255,255,0.1);
+	border: 5px solid #a95b00;
+}
+
+tr {
+	margin: 0;
+	padding: 0;
+	border-bottom: #bc893f 1px solid;
+}
+
+tr:nth-of-type(3n) {
+	border-bottom-width: 3px;
+}
+
+td {
+	border-right: #bc893f 1px solid;
+	width: 2.0833em;
+	height: 2.0833em;
+	margin: 0;
+	padding: 0;
+	vertical-align: center;
+	overflow: hidden;
+}
+
+td:nth-of-type(3n) {
+	border-right-width: 3px;
+}
+
+@media only screen and (min-width: 600px) {
+	td, td input {
+		font-size: 1.5rem;
+	}
+
+	td {
+		width: 3.125rem;
+		height: 3.125rem;
+	}
+}
+
+td input {
+	text-align: center;
+	width: 101%;
+	height: 105%; /*to prevent thin margin between borders and field*/
+	margin: auto;
+	vertical-align: center;
+	border: none;
+	background-color: transparent;
+	
+}
+
+td, td input {
+	color: white;
+}
+
+td.original, td input:focus, td input:not([value=""]) {
+	background-color: rgba(255,255,255,0.2);
+}
+
+button, a {
+	margin: 30px 20px 0px;
+	padding: 10px 30px;
+	background-color: transparent;
+	cursor: pointer;
+	font-size: 1.5rem;
+	font-weight: bold;
+	border: 3px #bc893f solid;
+	border-radius: .5rem;
+	color: #bc893f;
+	transition: background-color .4s, color .4s, border-color .4s;
+}
+
+a {
+	display: block;
+	max-width: 300px;
+	margin: 30px auto;
+	text-decoration: none;
+}
+
+button:hover, a:hover {
+	background-color: #bc893f;
+	color: #272727;
+}
+
+button:active, a:active {
+	color: #272727;
+	background-color: #a95b00;
+	border-color: #a95b00;
+	transition: background-color 0s, color 0s, border-color 0s;
+}

@@ -1,0 +1,17 @@
+<h3>Here is your solved sudoku:</h3>
+<table>
+	<% 9.times do |row| %>
+		<tr>
+			<% 9.times do |column| %>
+				<% if @solution[row][column] == @original[row][column] %>
+					<td class="original">
+				<% else %>
+					<td>
+				<% end %>
+						<%= @solution[row][column] %>
+					</td>
+			<% end %>
+		</tr>
+	<% end %>
+</table>
+<a href="/">Solve another sudoku</a>
