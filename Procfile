@@ -1,1 +1,1 @@
-web: bundle exec ruby sudoku-solver-sc-app.rb -p $PORT
+web: bundle exec thin start -p $PORT
