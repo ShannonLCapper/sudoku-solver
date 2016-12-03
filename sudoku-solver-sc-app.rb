@@ -25,6 +25,10 @@ get '/retry' do
   erb :retry, :locals => {:original => original}
 end
 
+get '/solution' do
+  erb :none_submitted
+end
+
 post '/solution' do
   board = Marshal.load(Marshal.dump(Template))
   params.each do |id, val|
