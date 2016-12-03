@@ -1,6 +1,5 @@
 require 'sinatra'
 require './lib/sudoku-solver-sc.rb'
-configure { set :server, :puma }
 enable :sessions
 set :session_secret, 'BADSECRET'
 
