@@ -81,9 +81,10 @@ td input {
 	-webkit-appearance: none;
 	-webkit-border-radius: 0px;
 	border-radius: 0;
+	padding: 0;
 	text-align: center;
 	width: 101%;
-	height: 105%; /*to prevent thin margin between borders and field*/
+	height: 110%; /*to prevent thin margin between borders and field*/
 	margin: auto;
 	vertical-align: center;
 	border: none;
