@@ -78,6 +78,9 @@ td:nth-of-type(3n) {
 }
 
 td input {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0px;
+	border-radius: 0;
 	text-align: center;
 	width: 101%;
 	height: 105%; /*to prevent thin margin between borders and field*/
