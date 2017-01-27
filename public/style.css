@@ -53,6 +53,7 @@ tr:nth-of-type(3n) {
 }
 
 td {
+	
 	border-right: #bc893f 1px solid;
 	width: 2.0833em;
 	height: 2.0833em;
@@ -63,6 +64,7 @@ td {
 }
 
 td, td input {
+	box-sizing: content-box;
 	font-size: 1rem;
 	color: white;
 }
@@ -78,7 +80,8 @@ td input {
 	padding: 0;
 	text-align: center;
 	width: 101%;
-	height: 110%; /*to prevent thin margin between borders and field*/
+	height: 101%; /*to prevent thin margin between borders and field*/
+	overflow: hidden;
 	margin: auto;
 	vertical-align: center;
 	border: none;
@@ -97,7 +100,7 @@ td input {
 	}
 }
 
-td.original, td input:focus, td input:not([value=""]) {
+td.original, td input:focus, td input.highlight {
 	background-color: rgba(255,255,255,0.2);
 }
 
