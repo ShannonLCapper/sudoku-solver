@@ -1,12 +1,3 @@
-function highlight(el) {
-  el = $(el);
-  if (el.val() !== "" && !el.hasClass("highlight")) {
-    el.addClass("highlight");
-  } else if (el.val() === "") {
-    el.removeClass("highlight");
-  }
-}
-
 function clearSlots() {
   var slots = $(".slot")
   slots.attr("value", "");
@@ -92,8 +83,8 @@ function moveSlotFocus(event) {
 $(document).ready(function() {
   var $slots = $(".slot");
   $slots.on("input", function() { 
-    this.value = this.value.replace(/[^1-9]/g,'');
-    highlight(this); 
+    this.value = this.value.replace(/[^1-9]/g, "");
+    $(this).toggleClass("highlight", this.value !== "")
   });
   $slots.on("keydown", moveSlotFocus);
 });       
