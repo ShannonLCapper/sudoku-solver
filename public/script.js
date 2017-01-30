@@ -4,19 +4,19 @@ function clearSlots() {
   slots.removeClass("highlight");
 }
 
-function getArrowKey(e) {
-  e = e || window.event;
-  switch (e.keyCode) {
-    case 38:
-      return "up";
-    case 40:
-      return "down";
-    case 37:
-      return "left";
-    case 39:
-      return "right";
-    default:
-      return null;
+function getArrowKey(event) {
+  event = event || window.event;
+  switch (event.which) {
+  case 38:
+    return "up";
+  case 40:
+    return "down";
+  case 37:
+    return "left";
+  case 39:
+    return "right";
+  default:
+    return null;
   }
 }
 
@@ -81,10 +81,20 @@ function moveSlotFocus(event) {
 }
 
 $(document).ready(function() {
-  var $slots = $(".slot");
-  $slots.on("input", function() { 
-    this.value = this.value.replace(/[^1-9]/g, "");
-    $(this).toggleClass("highlight", this.value !== "")
-  });
-  $slots.on("keydown", moveSlotFocus);
+
+  $("table").on(
+    {
+      "input": function(event) {
+        var elem = this;
+        elem.value = elem.value.replace(/[^1-9]/g, "");
+        $(elem).toggleClass("highlight", elem.value !== "");
+      },
+      "keydown": moveSlotFocus
+    }, 
+    "td input"
+  );
+
+
+  $("button[type='reset']").click(clearSlots);
+
 });       

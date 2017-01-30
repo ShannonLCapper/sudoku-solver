@@ -9,16 +9,20 @@ html, body {
 
 }
 
-body {
-	padding: 0px 20px 20px;
-	color: #bc893f;
-	text-align: center;
+html {
 	background: #272727; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(#151515, #272727); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#151515, #272727); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(#151515, #272727); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#151515, #272727); /* Standard syntax */
-    background-repeat: no-repeat;
+    background-repeat: repeat-x;
+}
+
+body {
+	padding: 0px 20px 20px;
+	color: #bc893f;
+	text-align: center;
+    min-width: 18rem;
 }
 
 body, td input {
@@ -102,6 +106,11 @@ td input {
 
 td.original, td input:focus, td input.highlight {
 	background-color: rgba(255,255,255,0.2);
+}
+
+td input:focus {
+	outline: none;
+	box-shadow: none;
 }
 
 button, a {
