@@ -6,9 +6,9 @@
 				<% 9.times do |column| %>
 					<td>
 					<% if original && original[row][column] != "." %>
-						<input class="slot highlight" type="text" pattern="[1-9]" maxlength="1" name=<%= row.to_s + "-" + column.to_s %> value=<%= original[row][column] %> >
+						<input class="slot highlight" type="text" pattern="[0-9]*" maxlength="1" name=<%= row.to_s + "-" + column.to_s %> value=<%= original[row][column] %> >
 					<% else %>
-						<input class="slot" type="text" pattern="[1-9]" maxlength="1" name=<%= row.to_s + "-" + column.to_s %> value="">
+						<input class="slot" type="text" pattern="[0-9]*" maxlength="1" name=<%= row.to_s + "-" + column.to_s %> value="">
 					<% end %>
 					</td>
 				<% end %>
