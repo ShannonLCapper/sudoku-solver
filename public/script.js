@@ -56,6 +56,7 @@ $.fn.focusAtEnd = function() {
 function processInput( event ) {
   var elem = this;
   elem.value = elem.value.replace(/[^1-9]/g, "");
+  elem.value = elem.value[0]; //prevent multiple numbers being sneaked in on mobile
   $(elem).toggleClass("highlight", elem.value !== "");
   if ( elem.value !== "" ) {
     moveSlotFocus.call( this, event, "forward" );
