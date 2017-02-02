@@ -93,6 +93,13 @@ td input {
 	
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+
 @media only screen and (min-width: 600px) {
 	td, td input {
 		font-size: 1.5rem;

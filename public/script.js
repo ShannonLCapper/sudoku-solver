@@ -4,7 +4,7 @@ function clearSlots() {
   slots.removeClass("highlight");
 }
 
-function getArrowKey(event) {
+function getDirectionKey(event) {
   event = event || window.event;
   switch (event.which) {
   case 38:
@@ -15,6 +15,8 @@ function getArrowKey(event) {
     return "left";
   case 39:
     return "right";
+  case 8:
+    return "back";
   default:
     return null;
   }
@@ -51,9 +53,21 @@ $.fn.focusAtEnd = function() {
   })
 }
 
-function moveSlotFocus(event) {
-  var direction = getArrowKey(event);
+function processInput( event ) {
+  var elem = this;
+  elem.value = elem.value.replace(/[^1-9]/g, "");
+  $(elem).toggleClass("highlight", elem.value !== "");
+  if ( elem.value !== "" ) {
+    moveSlotFocus.call( this, event, "forward" );
+  }
+}
+
+function moveSlotFocus(event, direction) {
+  direction = direction || getDirectionKey(event);
   if (!direction) return;
+  if (direction === "up" || direction === "down" ) {
+    event.preventDefault(); //stops arrow keys from changing number
+  }
   var slotName = this.name;
   var row = parseInt(slotName[0], 10);
   var column = parseInt(slotName[2], 10);
@@ -70,13 +84,49 @@ function moveSlotFocus(event) {
     case "right":
       column += 1;
       break;
-    default:
+    case "back":
+      if ( this.value !== "" ) {
+        return;
+      } else if ( column === 0 ) {
+        column = 8;
+        row -= 1;
+      } else {
+        column -= 1;
+      }
       break;
+    case "forward":
+      if ( column === 8 ) {
+        column = 0;
+        row += 1;
+      } else {
+        column += 1;
+      }
+      break;
+    default:
+      return;
   }
   var newSlotName = row + "-" + column;
   var $newSlot = $("input[name=" + newSlotName + "]");
-  if ($newSlot.length) {
-    $newSlot.focusAtEnd();
+  var newSlot = $newSlot[0];
+
+  focusAndSelect.call( newSlot, direction === "back" );
+}
+
+function focusAndSelect( delay = false ) {
+
+  var el = this;
+  var $el = $( el );
+
+  if ( delay ) {
+    $el.attr( "readonly", "readonly" );
+  }
+
+  setTimeout(function() {$el.focus().select(); }, 0 );
+
+  if ( delay ) {
+    setTimeout(function() {
+      $el.removeAttr( "readonly" ).select();
+    }, 50 );
   }
 }
 
@@ -84,17 +134,13 @@ $(document).ready(function() {
 
   $("table").on(
     {
-      "input": function(event) {
-        var elem = this;
-        elem.value = elem.value.replace(/[^1-9]/g, "");
-        $(elem).toggleClass("highlight", elem.value !== "");
-      },
-      "keydown": moveSlotFocus
+      "input": processInput,
+      "keydown": moveSlotFocus,
+      "click": focusAndSelect
     }, 
     "td input"
   );
 
-
   $("button[type='reset']").click(clearSlots);
 
-});       
+});  
