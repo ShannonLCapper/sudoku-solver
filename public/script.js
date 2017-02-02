@@ -1,7 +1,10 @@
 function clearSlots() {
   var $slots = $(".slot")
   $slots.attr("value", "");
+  $slots.data( "origVal", "" );
   $slots.removeClass("highlight");
+
+  clearMessage();
 }
 
 function getArrowKey(event) {
@@ -66,12 +69,27 @@ function processInput( event ) {
   $elem.toggleClass("highlight", elem.value !== "");
 
   // If a new number is typed in, move to the next input field
-  if ( $elem.val() !== "" && $elem.data( "origVal" ) !== $elem.val() ) {
+  var valChanged = $elem.data( "origVal" ) !== $elem.val();
+  if ( $elem.val() !== "" &&  valChanged ) {
     moveSlotFocus.call( this, event, "forward" );
+  }
+
+  //Clear any messages to user if a number is changed
+  if ( valChanged ) {
+    clearMessage();
   }
 
   // Save the value in the field for later reference
   $elem.data( "origVal", $elem.val() );
+
+}
+
+function getRowAndColumn( slot = this ) {
+  var $slot = $( this );
+  var slotName = slot.name;
+  var row = parseInt(slotName[0], 10);
+  var column = parseInt(slotName[2], 10);
+  return { row: row, column: column};
 }
 
 function moveSlotFocus(event, direction) {
@@ -80,10 +98,10 @@ function moveSlotFocus(event, direction) {
   if (direction === "up" || direction === "down" ) {
     event.preventDefault(); //stops arrow keys from changing number
   }
-  var slotName = this.name;
   var $slot = $( this );
-  var row = parseInt(slotName[0], 10);
-  var column = parseInt(slotName[2], 10);
+  var rowAndColumn = getRowAndColumn(  this );
+  var row = rowAndColumn.row;
+  var column = rowAndColumn.column;
   switch (direction) {
     case "up":
       row -= 1;
@@ -122,39 +140,74 @@ function moveSlotFocus(event, direction) {
   
 }
 
-function focusAndSelect( delay = false ) {
+function fillSlots( answers ) {
 
-  var el = this;
-  var $el = $( el );
+  
+  $( ".slot" )
+    //Set empty slots to 0 opacity
+    .filter( function() {
+      return $( this ).val() === "";
+    })
+    .css( "opacity", 0 )
 
-  if ( delay ) {
-    $el.attr( "readonly", "readonly" );
-  }
+    //Fill in answers
+    .val( function( index ) {
+      var coords = getRowAndColumn(  this );
+      var row = coords.row;
+      var column = coords.column;
+      return answers[row][column];
+    })
 
-  setTimeout(function() {$el.focus().select(); }, 0 );
+    //Fade in filled slots
+    .animate( {"opacity": 1 }, 200 );
+}
 
-  if ( delay ) {
-    setTimeout(function() {
-      $el.removeAttr( "readonly" ).select();
-    }, 50 );
-  }
+function messageUser( message ) {
+  $( "#message" ).text( message );
+}
+
+function clearMessage() {
+  $( "#message" ).text( "" );
+}
+
+function submitSudoku( event ) {
+
+  event.preventDefault();
+
+  var form = $( "#sudokuForm" );
+  form.find( ":focus").blur();
+
+  $.ajax({
+    type: "POST",
+    url: "/solution",
+    data: form.serialize(),
+    dataType: "json",
+  })
+    .done(function( response ) {
+      if ( response.solution ) {
+        fillSlots( response.solution );
+        clearMessage();
+      } else {
+        messageUser( "There are no possible solutions for the provided sudoku");
+      }
+    })
+    .fail(function() {
+      messageUser( "Oops! Something went wrong. Try again in a moment." );
+    });
 }
 
 $(document).ready(function() {
 
-  $("table").on(
+  $("#sudokuForm table").on(
     {
       "input": processInput,
       "keydown": moveSlotFocus,
-      // "click": focusAndSelect
     }, 
     "td input"
   );
 
-  $("button[type='reset']").click(clearSlots);
+  $("#sudokuForm button[type='reset']").click(clearSlots);
+
+  $("#sudokuForm").on("submit", submitSudoku);
 
 });  
-
-
-// To fix
-  // on master branch, make sure to include fix on preventing multiple inputs to field

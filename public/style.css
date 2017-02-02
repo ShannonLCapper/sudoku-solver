@@ -115,7 +115,7 @@ input[type=number] {
 	}
 }
 
-td.original, td input:focus, td input.highlight {
+td input:focus, .highlight {
 	background-color: rgba(255,255,255,0.2);
 }
 
