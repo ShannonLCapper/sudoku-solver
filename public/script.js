@@ -26,32 +26,34 @@ function getArrowKey(event) {
 $.fn.focusAtEnd = function() {
   return this.each(function() {
 
-    var $el = $(this),
+    var $el = $( this ),
         el = this;
 
     //Focus on element if it isn't already
-    if (!$el.is(":focus")) $el.focus();
+    if ( !$el.is( ":focus" ) ) {
+      $el.focus();
+    }
 
-    if (el.setSelectionRange) {
+    if ( el.setSelectionRange ) {
 
       //Double because Opera inconsistent about carriage return length
       var len = $el.val().length * 2;
       //Needs timeout for some reason or it doesn't work
       setTimeout(function() {
-        el.setSelectionRange(len, len);
-      }, 1);
+        el.setSelectionRange( len, len );
+      }, 1 );
 
     } else {
 
         //As fallback, replace the contents with itself
         //Doesn't work in Chrome, but Chome can do setSelectionRange
-        $el.val($el.val());
+        $el.val( $el.val() );
     }
 
     //Scroll to bottom in case we're in a tall textarea
     this.scrollTop = 999999;
 
-  })
+  });
 }
 
 function processInput( event ) {
@@ -60,13 +62,13 @@ function processInput( event ) {
   var $elem = $( elem );
 
   // Make sure only numbers 1-9 can be inputted
-  $elem.val( $elem.val().replace(/[^1-9]/g, "") );
+  $elem.val( $elem.val().replace( /[^1-9]/g, "" ) );
 
   // Prevent multiple number input (glitch on mobile)
   $elem.val( $elem.val()[0] || "" );
 
   // Highlight or unhighlight based on if field is empty
-  $elem.toggleClass("highlight", elem.value !== "");
+  $elem.toggleClass( "highlight", elem.value !== "" );
 
   // If a new number is typed in, move to the next input field
   var valChanged = $elem.data( "origVal" ) !== $elem.val();
@@ -84,8 +86,8 @@ function processInput( event ) {
 
 }
 
-function getRowAndColumn( slot = this ) {
-  var $slot = $( this );
+function getRowAndColumn( slot ) {
+  var $slot = $( slot );
   var slotName = slot.name;
   var row = parseInt(slotName[0], 10);
   var column = parseInt(slotName[2], 10);
