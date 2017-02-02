@@ -1,10 +1,10 @@
 function clearSlots() {
-  var slots = $(".slot")
-  slots.attr("value", "");
-  slots.removeClass("highlight");
+  var $slots = $(".slot")
+  $slots.attr("value", "");
+  $slots.removeClass("highlight");
 }
 
-function getDirectionKey(event) {
+function getArrowKey(event) {
   event = event || window.event;
   switch (event.which) {
   case 38:
@@ -15,8 +15,6 @@ function getDirectionKey(event) {
     return "left";
   case 39:
     return "right";
-  case 8:
-    return "back";
   default:
     return null;
   }
@@ -54,22 +52,36 @@ $.fn.focusAtEnd = function() {
 }
 
 function processInput( event ) {
+
   var elem = this;
-  elem.value = elem.value.replace(/[^1-9]/g, "");
-  elem.value = elem.value[0]; //prevent multiple numbers being sneaked in on mobile
-  $(elem).toggleClass("highlight", elem.value !== "");
-  if ( elem.value !== "" ) {
+  var $elem = $( elem );
+
+  // Make sure only numbers 1-9 can be inputted
+  $elem.val( $elem.val().replace(/[^1-9]/g, "") );
+
+  // Prevent multiple number input (glitch on mobile)
+  $elem.val( $elem.val()[0] || "" );
+
+  // Highlight or unhighlight based on if field is empty
+  $elem.toggleClass("highlight", elem.value !== "");
+
+  // If a new number is typed in, move to the next input field
+  if ( $elem.val() !== "" && $elem.data( "origVal" ) !== $elem.val() ) {
     moveSlotFocus.call( this, event, "forward" );
   }
+
+  // Save the value in the field for later reference
+  $elem.data( "origVal", $elem.val() );
 }
 
 function moveSlotFocus(event, direction) {
-  direction = direction || getDirectionKey(event);
+  direction = direction || getArrowKey(event);
   if (!direction) return;
   if (direction === "up" || direction === "down" ) {
     event.preventDefault(); //stops arrow keys from changing number
   }
   var slotName = this.name;
+  var $slot = $( this );
   var row = parseInt(slotName[0], 10);
   var column = parseInt(slotName[2], 10);
   switch (direction) {
@@ -80,19 +92,13 @@ function moveSlotFocus(event, direction) {
       row += 1;
       break;
     case "left":
-      column -= 1;
+        column -= 1;
       break;
     case "right":
-      column += 1;
-      break;
-    case "back":
-      if ( this.value !== "" ) {
+      if ( $slot.caret() !== $slot.val().length ) {
         return;
-      } else if ( column === 0 ) {
-        column = 8;
-        row -= 1;
       } else {
-        column -= 1;
+        column += 1;
       }
       break;
     case "forward":
@@ -110,7 +116,10 @@ function moveSlotFocus(event, direction) {
   var $newSlot = $("input[name=" + newSlotName + "]");
   var newSlot = $newSlot[0];
 
-  focusAndSelect.call( newSlot, direction === "back" );
+  if ( newSlot ) {
+    $newSlot.focusAtEnd();
+  }
+  
 }
 
 function focusAndSelect( delay = false ) {
@@ -137,7 +146,7 @@ $(document).ready(function() {
     {
       "input": processInput,
       "keydown": moveSlotFocus,
-      "click": focusAndSelect
+      // "click": focusAndSelect
     }, 
     "td input"
   );
@@ -145,3 +154,7 @@ $(document).ready(function() {
   $("button[type='reset']").click(clearSlots);
 
 });  
+
+
+// To fix
+  // on master branch, make sure to include fix on preventing multiple inputs to field
