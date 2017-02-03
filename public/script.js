@@ -44,9 +44,9 @@ var sudoku = {
       "td input"
     );
 
-    $("#sudokuForm button[type='reset']").click(this.fadeOutSlots);
+    $("#sudokuForm button[type='reset']").click( this.fadeOutSlots );
 
-    $("#sudokuForm").on("submit", this.submitSudoku);
+    $("#sudokuForm").on( "submit", this.submitSudoku );
   },
 
   findSlots: function() {
@@ -178,6 +178,19 @@ var sudoku = {
     
   },
 
+  toggleLoadingIcon: function() {
+    var $submitBtn = $( this ).closest( "form" ).find( "button[type='submit']" );
+    if ( $submitBtn.is( ":disabled" ) ) {
+      $submitBtn.html( $submitBtn.data( "text" ) );
+      $submitBtn.removeAttr( "disabled" );
+    } else {
+      $submitBtn.data( "text", $submitBtn.text() );
+      $submitBtn.attr( "disabled", "disabled" );
+      $submitBtn.html( "<i class='fa fa-spinner fa-pulse fa-fw'></i>" );
+    }
+    
+  },
+
   fillSlots: function( answers ) {
     sudoku.findSlots.call( this )
       //Set empty slots to 0 opacity
@@ -218,7 +231,13 @@ var sudoku = {
       url: "/solution",
       data: form.serialize(),
       dataType: "json",
-      timeout: 3000
+      timeout: 5000,
+      beforeSend: function() {
+        sudoku.toggleLoadingIcon.call( form );
+      },
+      complete: function() {
+        sudoku.toggleLoadingIcon.call( form );
+      }
     })
       .done(function( response ) {
         if ( response.solution ) {
