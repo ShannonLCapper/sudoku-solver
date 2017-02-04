@@ -68,6 +68,7 @@ var sudoku = {
   },
   
   emptySlots: function() {
+    
     var $slots = sudoku.findSlots.call( this );
     $slots.val( "" );
     $slots.attr("value", "");
