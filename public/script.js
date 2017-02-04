@@ -35,18 +35,17 @@
 
 var sudoku = {
 
-  init: function() {
-    $("#sudokuForm table").on(
+  init: function( $formEl ) {
+    $formEl.on(
       {
         "input": this.processInput,
-        "keydown": this.moveSlotFocus,
+        "keydown": this.moveSlotFocus
       }, 
       "td input"
     );
 
-    $("#sudokuForm button[type='reset']").click( this.fadeOutSlots );
-
-    $("#sudokuForm").on( "submit", this.submitSudoku );
+    $formEl.on("click", "button[type='reset']", this.fadeOutSlots );
+    $formEl.on( "submit", this.submitSudoku );
   },
 
   findSlots: function() {
@@ -76,7 +75,7 @@ var sudoku = {
     $slots.removeClass("highlight");
   },
 
-  getArrowKey: function(event) {
+  getDirectionKey: function(event) {
     event = event || window.event;
     switch (event.which) {
     case 38:
@@ -87,6 +86,8 @@ var sudoku = {
       return "left";
     case 39:
       return "right";
+    case 8:
+      return "back";
     default:
       return null;
     }
@@ -94,21 +95,21 @@ var sudoku = {
 
   processInput: function( event ) {
 
-    var elem = this;
-    var $elem = $( elem );
+    var el = this;
+    var $el = $( el );
 
     // Make sure only numbers 1-9 can be inputted
-    $elem.val( $elem.val().replace( /[^1-9]/g, "" ) );
+    $el.val( $el.val().replace( /[^1-9]/g, "" ) );
 
     // Prevent multiple number input (glitch on mobile)
-    $elem.val( $elem.val()[0] || "" );
+    $el.val( $el.val()[0] || "" );
 
     // Highlight or unhighlight based on if field is empty
-    $elem.toggleClass( "highlight", elem.value !== "" );
+    $el.toggleClass( "highlight", $el.val() !== "" );
 
     // If a new number is typed in, move to the next input field
-    var valChanged = $elem.data( "origVal" ) !== $elem.val();
-    if ( $elem.val() !== "" &&  valChanged ) {
+    var valChanged = $el.data( "origVal" ) !== $el.val();
+    if ( $el.val() !== "" &&  valChanged ) {
       sudoku.moveSlotFocus.call( this, event, "forward" );
     }
 
@@ -118,7 +119,7 @@ var sudoku = {
     }
 
     // Save the value in the field for later reference
-    $elem.data( "origVal", $elem.val() );
+    $el.data( "origVal", $el.val() );
 
   },
 
@@ -131,7 +132,7 @@ var sudoku = {
   },
 
   moveSlotFocus: function(event, direction) {
-    direction = direction || sudoku.getArrowKey(event);
+    direction = direction || sudoku.getDirectionKey(event);
     if (!direction) return;
     if (direction === "up" || direction === "down" ) {
       event.preventDefault(); //stops arrow keys from changing number
@@ -157,6 +158,16 @@ var sudoku = {
           column += 1;
         }
         break;
+      case "back":
+        if ( $slot.caret() !== 0 ) {
+          return;
+        } else if ( column === 0 ) {
+          column = 8;
+          row -= 1;
+        } else {
+          column -= 1;
+        }
+        break;
       case "forward":
         if ( column === 8 ) {
           column = 0;
@@ -170,10 +181,14 @@ var sudoku = {
     }
     var newSlotName = row + "-" + column;
     var $newSlot = $("input[name=" + newSlotName + "]");
-    var newSlot = $newSlot[0];
 
-    if ( newSlot ) {
+    if ( $newSlot.length ) {
       $newSlot.focusAtEnd();
+      // To correct for backspace firing input event and 
+      // deleting last character in the new slot
+      if ( direction === "back" ) {
+        $newSlot.val( $newSlot.val() + " " );
+      }
     }
     
   },
@@ -219,37 +234,36 @@ var sudoku = {
     $( "#message" ).text( "" );
   },
 
+  handleServerResponse: function( response ) {
+    if ( response.solution ) {
+      sudoku.fillSlots.call( this, response.solution );
+      sudoku.clearMessage();
+    } else {
+      sudoku.messageUser( "There are no possible solutions for the provided sudoku");
+    }
+  },
+
   submitSudoku: function( event ) {
 
     event.preventDefault();
 
-    var form = $( "#sudokuForm" );
-    form.find( ":focus").blur();
+    var $form = $( this );
+    $form.find( ":focus").blur();
 
     $.ajax({
       type: "POST",
-      url: "/solution",
-      data: form.serialize(),
+      url: $form.attr( "action" ),
+      data: $form.serialize(),
       dataType: "json",
-      timeout: 5000,
-      beforeSend: function() {
-        sudoku.toggleLoadingIcon.call( form );
-      },
-      complete: function() {
-        sudoku.toggleLoadingIcon.call( form );
-      }
-    })
-      .done(function( response ) {
-        if ( response.solution ) {
-          sudoku.fillSlots.call( form, response.solution );
-          sudoku.clearMessage();
-        } else {
-          sudoku.messageUser( "There are no possible solutions for the provided sudoku");
-        }
-      })
-      .fail(function() {
+      context: $form,
+      timeout: 3000,
+      beforeSend: sudoku.toggleLoadingIcon,
+      complete: sudoku.toggleLoadingIcon,
+      success: sudoku.handleServerResponse,
+      error: function() {
         sudoku.messageUser( "Oops! Something went wrong. Try again in a moment." );
-      });
+      }
+    });
   }
 }
 
@@ -257,6 +271,6 @@ var sudoku = {
 
 $(document).ready(function() {
 
-  sudoku.init() 
+  sudoku.init( $( "#sudokuForm" ) ); 
 
 });  
