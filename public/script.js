@@ -257,7 +257,7 @@ var sudoku = {
       data: $form.serialize(),
       dataType: "json",
       context: $form,
-      timeout: 3000,
+      timeout: 5000,
       beforeSend: sudoku.toggleLoadingIcon,
       complete: sudoku.toggleLoadingIcon,
       success: sudoku.handleServerResponse,
