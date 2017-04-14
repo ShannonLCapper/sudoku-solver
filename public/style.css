@@ -19,23 +19,42 @@ html {
 }
 
 body {
-	padding: 0px 20px 20px;
+	font-size: 1.2rem;
+	padding: 20px;
 	color: #bc893f;
 	text-align: center;
     min-width: 18rem;
 }
 
-body, td input {
-	font-family: Verdana, Geneva, sans-serif;
+body,
+td input,
+button,
+a {
+	font-family: 'Architects Daughter', cursive;
 }
 
+header {
+	margin: 10px auto 20px;
+	padding: 10px 30px;
+	border: 2px dashed #a95b00;
+	border-radius: 1rem;
+	max-width: 40rem;
+	text-align: center;
+
+}
 h1 {
-	font-size: 3rem;
-	text-shadow: 2px 2px #a95b00;
+	margin: 0;
+	padding: 0;
+	font-size: 4rem;
+	font-family: 'Fredericka the Great', cursive;
+	font-weight: normal;
 }
 
 h3 {
 	font-weight: normal;
+	font-size: 1.5rem;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 table {
@@ -69,7 +88,9 @@ td {
 
 td, td input {
 	box-sizing: content-box;
+	font-family: 'Handlee', cursive;
 	font-size: 1rem;
+	font-weight: bold;
 	color: white;
 }
 
@@ -124,17 +145,17 @@ td input:focus {
 	box-shadow: none;
 }
 
-button, a {
-	margin: 30px 20px 0px;
+/*button, a {
+	margin: 10px 20px 0px;
 	padding: 10px 30px;
 	background-color: transparent;
 	cursor: pointer;
 	font-size: 1.5rem;
 	font-weight: bold;
-	border: 3px #bc893f solid;
+	border: 2px #bc893f dashed;
 	border-radius: .5rem;
 	color: #bc893f;
-	transition: background-color .4s, color .4s, border-color .4s;
+	transition: color .4s, background-color .4s, border-color .4s, border-style .4s;
 }
 
 a {
@@ -144,14 +165,85 @@ a {
 	text-decoration: none;
 }
 
-button:hover, a:hover {
-	background-color: #bc893f;
+button:hover,
+button:active,
+a:hover,
+a:active {
+	border-style: solid;
 	color: #272727;
 }
 
+button:hover, a:hover {
+	background-color: #bc893f;
+}
+
 button:active, a:active {
-	color: #272727;
 	background-color: #a95b00;
 	border-color: #a95b00;
-	transition: background-color 0s, color 0s, border-color 0s;
+	transition: background-color 0s, color 0s, border-color 0s, border-style 0s;
+}*/
+
+#message {
+	margin-bottom: 10px;
+}
+
+button {
+  color: #272727;
+  background-color: rgba(188,137,63,.7);
+  font-size: 1.5rem;
+  border: none;
+  cursor: pointer;
+  line-height: 1em;
+  margin: 15px 40px;
+  outline: none;
+  padding: 12px 40px 10px;
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+button:before,
+button:after {
+  border-color: transparent;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  border-style: solid;
+  border-width: 0;
+  content: "";
+  height: 24px;
+  position: absolute;
+  width: 24px;
+}
+button:before {
+  border-color: #bc893f;
+  border-right-width: 2px;
+  border-top-width: 2px;
+  right: -5px;
+  top: -5px;
+}
+button:after {
+  border-bottom-width: 2px;
+  border-color: #bc893f;
+  border-left-width: 2px;
+  bottom: -5px;
+  left: -5px;
+}
+button:hover,
+button.hover {
+  background-color: #bc893f;
+}
+button:hover:before,
+button.hover:before,
+button:hover:after,
+button.hover:after {
+  height: 100%;
+  width: 100%;
+}
+
+button:active {
+	background-color: #a95b00;
+}
+
+button:active:before,
+button:active:after {
+	border-color: #a95b00;
 }
