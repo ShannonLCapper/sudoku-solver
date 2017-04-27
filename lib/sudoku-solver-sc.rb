@@ -1,11 +1,7 @@
 def solve_sudoku(board)
   return nil unless is_valid_sudoku(board)
   solve_sudoku_work(board)
-  if is_valid_sudoku(board)
-    return board
-  else
-    return nil
-  end
+  return is_valid_sudoku(board) ? board : nil
 end
 
 def solve_sudoku_work(board)
